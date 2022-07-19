@@ -1,0 +1,54 @@
+// db.posts.find({})
+// db.posts.aggregate([
+//     {
+//         $lookup:{
+//             from:'user',
+//             localField:'name',
+//             foreignField:'name',
+//             as:'UserData'
+//         }
+//     }])  
+    //lookup is used to join two collection
+    // here posts is left collection
+    //localfield is based on which field we want to join and field should have in both
+    //foreign field is field of right collection
+    //in this we have 40 docs
+    
+    
+    // db.user.aggregate([
+    // {
+    //     $lookup:{
+    //         from:'posts',
+    //         localField:'name',
+    //         foreignField:'name',
+    //         as:'PostData'
+    //     }
+    // }])  
+    //it will have only three doc
+    
+    
+    //inner join
+    
+    db.user.aggregate([
+    {
+        $lookup:{
+            from:'posts',
+            localField:'name',
+            foreignField:'name',
+            as:'PostData'
+        }
+        },
+        {
+            $match:{
+                'PostData':{
+                    $ne:[]
+                }
+            }
+        }
+    ]) 
+    
+    
+    
+    
+    
+    

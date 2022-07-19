@@ -1,0 +1,392 @@
+it is an non relational type database means it not going to use sql,we use function to fetch data
+there will be no relation between table like Mysql 
+
+client(browser) <=> server <=> Database
+client will ask for request and server connect to database
+
+React(browser) => Node => Database(SQL/NoSQL)
+                       DBMS
+                        |
+    Relational                          Non-Relational
+
+
+  Relational->SQL or SEQUEL
+  SQL--> Structured query language
+  SEQUEL-->Structured English QUEry  Language
+  Example-->MySql,SQLServer,Oracle etc.
+  Tool-->Workbench,phpAdmin
+  relational database store the data in form of table,columns and rows
+
+  Non-Relational=>store data in form  of BSON(extended form of JSON)
+  Example:MongoDB,CouchDB,Cassandra etc.
+  Tool=>MongoDB Compass,NoSQL Booster,Studio 3T
+
+
+  student:
+  {
+      id:1,
+      name:'xxx',
+      age:20,
+      email:''
+  },
+  {
+      id:2,
+      name:'yyy',
+      age:22
+  },
+  {
+      id:3,
+      name:'zzz',
+      age:23,
+      phoneNumber:'12576'
+  }
+
+
+
+
+
+  Relational database              Non-Relational database
+  Tables                  -          collection(student)
+  Rows                    -          Documents
+  Columns                 -          Fields(Id,name,age etc)
+
+
+No DDL(an SQL statements)  things => Each document can have any fields.but In Sql before inserting the rows we are defining the structure but in mongodb we will not define any structure/schema before inserting documents(there may be chances of missing field in mongodb because we do not define any schema like mySQl)
+in case of mysql if we miss any field it will throw error but this is not the case in mongodb
+
+
+
+
+Default port - 27017
+
+CREATING DATABASE:
+use <database name>
+-use myDatabase
+
+DELETE DATABASE:
+db.dropDatabase();
+
+CREATE COLLECTION:
+db.createCollection('<collection name>');
+db.createCollection('posts');
+
+DROP COLLECTION:
+db.<collectionName>.drop() 
+-db.posts.drop();
+
+DATA TYPES:
+String- "Ayush"
+Integer- 23
+Boolean- True ,False
+Array- [1,2,30],[{name:'guvi'},{name:'scaler'}]
+Object- {age:21}
+Date
+Double-25.36,12.48
+Timestamp
+
+CRUD OPERATION:
+CREATE:
+db.<collection_name>.insertOne({});//Insert single documents(row)
+db.<collection_name>.insertMany([]);//Insert multiple documents(row)
+db.<collection_name>.insert(); //Insert single or multiple docs
+
+
+READ:
+db.<collection_name>.findOne({})//get single docs
+db.<collection_name>.find({});//get multiple docs
+
+
+dp.posts.find({userId:1});
+//select* from posts where userId=1;
+
+db.posts.findOne({userId:1});
+//select * from posts where userId=1 limit=1;
+
+
+UPDATE:
+db.<collection_name>.updateOne({<where>},{$set:,new value>}); //update single document
+db.<collection_name>.updateMany({<where>},{$set:,new value>}); //update Multiple document
+db.<collection_name>.update({<where>},{$set:,new value>}); //update single document
+db.<collection_name>.update({<where>},{$set:,new value>},{multi:true}); //update multiple document
+db.<collection_name>.findOneUpdate({<where>},{$set:,new value>}); //update single document & retrieve old document
+db.<collection_name>.findOneUpdate({<where>},{$set:,new value>},{returnNewdocument:true}); //update single document
+
+
+DELETE:
+db.<collection_name>.remove({}); //delete document based on condition
+
+WHERE:
+db<collection_name..find({<condition>:>value>});
+db.posts.find({userID:10})//similar as find
+
+
+AND:
+db.<collection_name>.find({$and:[{<condition1>:<value>},{<condition2>:<value>}]});
+db.posts.find({$and:[{userID:10},{title:'guvi'}]})
+
+OR:
+db.<collection_name>.find({$or:[{<condition1>:<value>},{<condition2>:<value>}]});
+db.posts.find({$or:[{userID:10},{title:'guvi'}]})
+
+NOT EQUAL:
+db.<collection name>.find({<condition> :{$ne:<value>}})
+db.posts.find({userID:{$ne:2}})
+
+LESS THAN
+db.<collection name>.find({<condition> :{$lt:<value>}})
+db.posts.find({userID:{$lt:2}})
+
+LESS THAN OR EQUAL TO
+db.<collection name>.find({<condition> :{$lte:<value>}})
+db.posts.find({userID:{$lte:2}})
+
+GREATER THAN
+db.<collection name>.find({<condition> :{$gt:<value>}})
+db.posts.find({userID:{$gt:2}})
+
+greater than or equal
+db.<collection name>.find({<condition> :{$gte:<value>}})
+db.posts.find({userID:{$gte:2}})
+
+
+IN:
+db.<collection name>.find({<condition> :{$in:[value1,value2]}})
+db.posts.find({userID:{$in:[2,3]}})//it will accept an array always
+//if we only give one value witjout providing it in array than it will throw error
+db.posts.find({name:{$in:'bbb'}})//this will throw an error
+db.posts.find({name:{$in:['aaa']}}) //this will not throw error
+
+
+NOT IN:
+db.<collection name>.find({<condition> :{$nin:[value1,value2]}})
+db.posts.find({userID:{$nin:[2,3]}})
+
+
+NOT :
+db.<collection name>.find({<condition> :{$not:<any_condition>:[value1.value2]}})
+db.posts.find({userID:{$not:{$gte:10}}})
+
+db.posts.find({name: {$not: {$in:['aaa']}}})//it will select other document than with name 'aaa'
+
+
+
+PROJECTION:
+db.<collection name>.find({},{<field>:1})
+db.posts.find({},{userId:0,title:1});
+select id name from table
+db.posts.find({},{name:1,age:1,id:0})//with this name and age of all documents will be displayed and by default id will come if we dont want id than give id as o
+db.posts.find({},{name:1,age:1,id:0,likes:0})//but if do lik3 this it will throw error "projection cannot have mix of exclusion and inclusion"
+//the second parameter of find is projection
+
+LIMIT:
+db.<collection name>.find().limit(<number>)
+db.posts.find().limit(5) //5 records
+
+SKIP:
+db.<collection name>.find().skip(<number>).limit(<number>)
+db.posts.find().skip(1).limit(5)//skip 1 record and fetch next five recors
+
+SORT
+db.<collection name>.find().sort({<field>:1 or -1});
+db.posts.find().sort({userId:1});//ascending
+db.posts.find().sort({userId:-1});//descending
+
+
+COUNT:
+db.posts.count(); //count all records
+db.posts.count({userId:10})//count records which has userId 10
+
+DISTINCT:
+db.<collection name>.distinct("<field>")
+db.posts.collection name>.distinct("userId")//get all unique userId value 
+
+
+AGGREGATE FUNCTION:PIPELINE FUNCTION
+$group=>$sum (count)---$match--->group ooperator inside aggregate function
+   
+   db.posts.aggregate([
+       {
+           $group:{
+               _id:"$userId"(field),
+               noOfPosts:{"$sum":1}
+           }
+       }
+   ]);
+//we are going to group based on userId
+//we want to group our documents based on userId(unique userId) field by using group operator
+
+if we are using group operator _id is must
+//after grouping our documents based on user id what we want to do like here we want sum of noOfPost
+
+
+   $group => $sum
+   db.posts.aggregate([
+
+       {
+         $group:{
+               _id:"$userId",
+               noOfPosts:{"$sum":$likes}  
+       }
+   ])
+   //will group on sum of likes
+
+
+$group => $max
+   db.posts.aggregate([
+    {
+      $group:{
+               _id:"$userId",
+               noOfDocuments:{"$max":'$likes'}  
+      }
+    }
+    ])
+    //will group on max likes in group
+
+$group => $min
+    db.posts.aggregate([
+    {
+      $group:{
+               _id:"$userId",
+               noOfDocuments:{"$min":'$likes'}  
+      }
+    }
+    ])
+//will group on max likes in group
+
+
+
+$group => $avg
+db.posts.aggregate([
+    {
+      $group:{
+              _id:"$userId",
+              noOfDocuments:{"$avg":'$likes'}  
+      }
+    }
+    ])
+    //will add total likes divided by total document in particular group
+
+
+$match--->match ooperator inside aggregate function
+
+db.posts.aggregate( [
+    {
+        $match:{
+            age:32
+        }
+    }
+    ])
+//will show document which match the given data that is age=30
+
+ db.posts.find({age:32})//will also do the same but we prefer match because it is a pipeline function we can do multiple things at once 
+
+//  db.posts.aggregate([
+//     {
+//       $group:{
+//               _id:"$userId",
+//               noOfDocuments:{"$avg":'$likes'}  
+//       },
+    //      $match:{
+    //         age:32
+    //     }
+
+    // }
+    // ])
+// it will not give output because output of group does not have age in that in pipeline function it execute one after another
+
+
+db.posts.aggregate([
+    {
+      $group:{
+              _id:"$userId",
+              noOfDocuments:{"$avg":'$likes'}  
+      },
+         $match:{
+            noOfDocuments:14.555555555555555
+        }
+
+    }
+    ])
+// // but this will work 
+
+db.posts.aggregate( [
+    {
+        likes:{
+            $gt:10
+        }
+    }])
+
+    //project
+
+    db.posts.aggregate( [
+    {
+        $match:{
+             likes:{
+            $gt:10
+        }
+    }
+    },
+        {
+            $project:{
+                _id:1,
+                age:1,
+                userId:1,
+                noOfPost:1
+                
+            }
+        }
+    
+    ])
+
+//limit
+db.posts.aggregate( [
+    {
+        $match:{
+             likes:{
+            $gt:10
+        }
+    }
+    },
+        {
+            $project:{
+                _id:1,
+                age:1,
+                userId:1,
+                noOfPost:1
+                
+            }
+        },
+        {
+            $limit:3
+        },
+        {
+            $skip: 0
+        },
+        {
+            $sort:{
+                likes:1
+            }
+        }
+    ])
+
+//in case of aggregate function implement one by one so unlike normal(where skip will priortize over limit) limit will execute first than skip ,so it limit to 3 doc and skip one doc so output will be 2 remaining doc
+
+
+//lookup function
+
+db.posts.aggregate([
+    {
+        $lookup:{
+            from:'user',
+            localField:'name',
+            foreignField:'name',
+            as:'User Data'
+        }
+    }])  
+    //lookup is used to join two collection
+    // here posts is left collection
+    //localfield is based on which field we want to join and field should have in both
+    //foreign field is field of right collection
+
+
+    //innerjoin --->only matched field will be matched from both collection

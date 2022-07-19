@@ -1,0 +1,227 @@
+// db.posts.find({})
+// db.posts.find({$and:[{likes:10},{age:32}]})
+// db.posts.find({$or:[{likes:10},{age:32}]})
+
+// db.posts.find({age:{$ne:[32]}})
+
+// db.posts.find({age:{$lt:[32]}})
+
+// db.posts.find({age:{$lte:[32]}});
+
+// db.posts.find({age:{$gt:[32]}});
+
+// db.posts.find({age:{$gte:[32]}});
+
+// db.posts.find({name:{$in:['aaa','bbb']}});
+// db.posts.find({name:{$in:'bbb'}})//this will throw an error
+// db.posts.find({name:{$in:['aaa']}}) //this will not throw error
+
+// db.posts.find({name:{$nin:['aaa','bbb']}});
+
+// db.posts.find({name: {$not: {$in:['aaa']}}})//it will select other document than with name 'aaa'
+
+// db.posts.find({},{name:1,age:1,id:0})//with this name and age of all documents will be displayed and by default id will come if we dont want id than give id as o
+// db.posts.find({},{name:1,age:1,id:0,likes:0})//but if do lik this it will throw error "projection cannot have mix of exclusion and inclusion"
+
+
+
+// db.posts.find().limit(2)// first 2 documents
+
+// db.posts.find().skip(1)//show all document eccept first
+// db.posts.find().skip(1).limit(2)//
+// db.posts.find().limit(2).skip(1)//same as avobe,skip will occur first
+
+// db.posts.find().sort({likes:1});//ascending
+// db.posts.find().sort({likes:-1});//descending
+
+// db.posts.count(); //count all records(document)//3
+// db.posts.count({likes:18})//count records which has likes=18
+
+
+// db.posts.distinct("likes")//get distinct of likes(18,10)
+
+
+
+
+//Aggregate function
+db.posts.find({});
+
+// db.posts.update({_id:ObjectId("6289d91901a949ea809fbcaf")},{$set:{userId:1,pageId:2}})
+
+// db.posts.insert({
+//     "name" : "zzz",
+// 	"age" : 82,
+// 	"noOfPost" : 48,
+// 	"likes" : 18,
+// 	"pageId" : 78,
+// 	"userId" : 45
+// })
+
+// db.posts.aggregate([
+//     {
+//       $group:{
+//               _id:"$userId",
+//               noOfDocuments:{"$sum":1}  
+//       }
+//     }
+//     ])
+    //we want to group our documents based on userId(unique userId) field by using group operator
+//if we are using group operator _id is must
+//after grouping our documents based on user id what we want to do like here we want sum of noOfPost
+//$  in userId is given because if we have field name at right  hand side we use $ symbol because we are assigning userID to _id
+
+// db.posts.aggregate([
+//     {
+//       $group:{
+//               _id:"$userId",
+//               noOfDocuments:{"$sum":'$likes'}  
+//       }
+//     }
+//     ])
+
+
+
+// db.posts.aggregate([
+//     {
+//       $group:{
+//               _id:"$userId",
+//               noOfDocuments:{"$max":'$likes'}  
+//       }
+//     }
+//     ])
+
+// db.posts.aggregate([
+//     {
+//       $group:{
+//               _id:"$userId",
+//               noOfDocuments:{"$min":'$likes'}  
+//       }
+//     }
+//     ])
+
+
+//  db.posts.aggregate([
+//     {
+//       $group:{
+//               _id:"$userId",
+//               noOfDocuments:{"$avg":'$likes'}  
+//       }
+//     }
+//     ])
+
+//MATCH OPERATOR
+
+// db.posts.aggregate( [
+//     {
+//         $match:{
+//             age:32
+//         }
+//     }
+//     ])
+// //will show document which match the given data that is age=30
+
+// db.posts.find({age:32})//will also do the same but we prefer match because it is a pipeline function we can do multiple things at once 
+
+//  db.posts.aggregate([
+//     {
+//       $group:{
+//               _id:"$userId",
+//               noOfDocuments:{"$avg":'$likes'}  
+//       },
+    //      $match:{
+    //         age:32
+    //     }
+
+    // }
+    // ])
+// it will not give output because output of group does not have age in that in pipeline function it execute one after another
+
+
+// db.posts.aggregate([
+//     {
+//       $group:{
+//               _id:"$userId",
+//               noOfDocuments:{"$avg":'$likes'}  
+//       },
+//          $match:{
+//             noOfDocuments:14.555555555555555
+//         }
+
+//     }
+//     ])
+// // but this will work 
+
+// db.posts.aggregate( [
+//     {
+//         likes:{
+//             $gt:10
+//         }
+//     }])
+
+//PROJECT
+
+// db.posts.aggregate( [
+    // {
+    //     $match:{
+    //          likes:{
+    //         $gt:10
+    //     }
+    // }
+    // },
+    //     {
+    //         $project:{
+    //             _id:1,
+    //             age:1,
+    //             userId:1,
+    //             noOfPost:1
+                
+    //         }
+    //     }
+    
+    // ])
+
+//LIMIT
+db.posts.aggregate( [
+    {
+        $match:{
+             likes:{
+            $gt:10
+        }
+    }
+    },
+        {
+            $project:{
+                _id:1,
+                age:1,
+                userId:1,
+                noOfPost:1,
+                likes:1
+                
+            }
+        },
+        {
+            $limit:3
+        },
+        {
+            $skip: 0
+        },
+        {
+            $sort:{
+                likes:1
+            }
+        }
+    ])
+
+//in case of aggregate function implement one by one so unlike normal limit will execute first than skip ,so it limit to 3 doc and skip one doc so output will be 2 remaining doc
+
+
+
+
+
+
+
+
+
+
+
+

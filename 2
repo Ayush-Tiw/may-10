@@ -1,0 +1,25 @@
+use MyDatabase
+
+ db.createCollection('posts');
+ 
+  db.posts.insertOne({ 'name':'ddd',
+    'age':32,
+    'noOfPost':52,
+    'likes':10
+});
+
+db.posts.insertMany([{ 'name':'aaa',
+    'age':38,
+    'noOfPost':72,
+    'likes':18
+},
+{ 'name':'bbb',
+    'age':32,
+    'noOfPost':52,
+    'likes':10
+}, 
+{ 'name':'ccc',
+    'age':12,
+    'noOfPost':62,
+    'likes':20
+}]);

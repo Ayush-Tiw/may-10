@@ -1,0 +1,49 @@
+db.posts.findOne({age:12});//find only one document
+   db.posts.find({}) //to find data
+   use myDatabase
+   
+ db.createCollection('posts');
+ 
+  db.posts.insertOne({ 'name':'ddd',
+    'age':32,
+    'noOfPost':52,
+    'likes':10
+});
+
+db.posts.insertMany([{ 'name':'aaa',
+    'age':38,
+    'noOfPost':72,
+    'likes':18
+},
+{ 'name':'bbb',
+    'age':32,
+    'noOfPost':52,
+    'likes':10
+}, 
+{ 'name':'ccc',
+    'age':12,
+    'noOfPost':62,
+    'likes':20
+}]);
+
+
+
+//can insert one or multiple
+db.posts.insert({ 'name':'cvc',
+    'age':12,
+    'noOfPost':62,
+    'likes':20
+});
+
+
+ //update  one 
+  db.posts.updateOne({_id:  ObjectId("628a35113bc4f8792d5964f8")},{$set:{name:'abc'}})//$set is a operator
+//and find ,updateOne are  function
+
+//update many--it will update in multiple matched item
+  db.posts.updateMany({age:12},{$set:{senior:true}})
+   
+
+
+
+   
